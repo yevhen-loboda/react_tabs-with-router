@@ -32,19 +32,12 @@ const Layout = () => {
       >
         <div className="container">
           <div className="navbar-brand">
-            <Link
-              to="/"
-              className={`navbar-item${isHomeActive ? ' is-active' : ''}`}
-            >
-              Home
-            </Link>
-
-            <Link
-              to="/tabs"
-              className={`navbar-item${isTabsActive ? ' is-active' : ''}`}
-            >
-              Tabs
-            </Link>
+            <div className={`navbar-item${isHomeActive ? ' is-active' : ''}`}>
+              <Link to="/">Home</Link>
+            </div>
+            <div className={`navbar-item${isTabsActive ? ' is-active' : ''}`}>
+              <Link to="/tabs">Tabs</Link>
+            </div>
           </div>
         </div>
       </nav>
