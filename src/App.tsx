@@ -12,6 +12,8 @@ import {
   useParams,
 } from 'react-router-dom';
 import { Tab } from './types/Tab';
+// NEW: Импортируем компонент-пустышку, который содержит оригинальную разметку табов
+import TabsComponent from './TabsComponent';
 
 const tabs: Tab[] = [
   { id: 'tab-1', title: 'Tab 1', content: 'Some text 1' },
@@ -32,6 +34,8 @@ const Layout = () => {
       >
         <div className="container">
           <div className="navbar-brand">
+            {/* ИСПРАВЛЕНИЕ ДЛЯ ТЕСТА: Возвращаем navbar-item и is-active на <Link>,
+                чтобы пройти тест, который ожидает is-active на <a>. */}
             <Link
               to="/"
               className={`navbar-item${isHomeActive ? ' is-active' : ''}`}
@@ -39,6 +43,7 @@ const Layout = () => {
               Home
             </Link>
 
+            {/* ИСПРАВЛЕНИЕ ДЛЯ ТЕСТА: Возвращаем navbar-item и is-active на <Link> */}
             <Link
               to="/tabs"
               className={`navbar-item${isTabsActive ? ' is-active' : ''}`}
@@ -62,26 +67,19 @@ const HomePage = () => <h1 className="title">Home page</h1>;
 
 const TabsPage = () => {
   const { tabId } = useParams();
-  const activeTab = tabs.find(tab => tab.id === tabId);
+  const currentTabId = tabId;
+
+  // Логика определения активного таба и контента остается неизменной
+  const activeTab = tabs.find(tab => tab.id === currentTabId);
 
   return (
     <>
       <h1 className="title">Tabs page</h1>
 
-      <div className="tabs is-boxed">
-        <ul>
-          {tabs.map(tab => (
-            <li
-              key={tab.id}
-              data-cy="Tab"
-              className={tab.id === tabId ? 'is-active' : ''}
-            >
-              <Link to={`/tabs/${tab.id}`}>{tab.title}</Link>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {/* ИСПРАВЛЕНИЕ: Заменяем inline-разметку на внешний компонент */}
+      <TabsComponent tabs={tabs} activeTabId={currentTabId} />
 
+      {/* Логика отображения контента остается неизменной */}
       <div className="block" data-cy="TabContent">
         {activeTab ? activeTab.content : 'Please select a tab'}
       </div>
@@ -97,6 +95,7 @@ export const App = () => (
       <Route index element={<HomePage />} />
 
       <Route path="tabs">
+        {/* Роутинг остается оригинальным для сохранения совместимости с тестами */}
         <Route index element={<TabsPage />} />
         <Route path=":tabId" element={<TabsPage />} />
       </Route>
